@@ -1,0 +1,141 @@
+<div class="shell">
+  <main class="page">
+    <section class="panel composer">
+      <div class="panel-header">
+        <div class="header-main">
+          <h1>Schematron Validator</h1>
+
+          <div class="header-chips">
+            @if (selectedFileName(); as fileName) {
+              <span class="chip">{{ fileName }}</span>
+            }
+
+            @if (localDocumentHint().rootElement; as rootElement) {
+              <span class="chip">{{ rootElement }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <button type="button" class="ghost-button" (click)="formatXml()">Format</button>
+          <label class="ghost-button" for="xml-file-input">Open file</label>
+        </div>
+      </div>
+
+      <label
+        class="dropzone"
+        [class.dragging]="isDragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <div class="editor-grid">
+          <div class="line-numbers" #lineNumberLayer>
+            @for (line of lineNumbers(); track line) {
+              <span>{{ line }}</span>
+            }
+          </div>
+
+          <pre class="xml-highlight" #highlightLayer [innerHTML]="highlightedXml()"></pre>
+          <textarea
+            class="xml-input"
+            [value]="xmlInput()"
+            (input)="onXmlInput($event)"
+            (scroll)="syncEditorScroll($event, highlightLayer)"
+            (scroll)="syncLineNumberScroll($event, lineNumberLayer)"
+            placeholder='<?xml version="1.0" encoding="utf-8"?>&#10;<OrderResponse xmlns="urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2" ...>'
+            spellcheck="false"
+          ></textarea>
+        </div>
+        <span class="dropzone-note">Drop an XML file here or paste the full document.</span>
+      </label>
+
+      <input
+        id="xml-file-input"
+        type="file"
+        accept=".xml,text/xml,application/xml"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+
+      <div class="actions">
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="isValidating()"
+          (click)="validate()"
+        >
+          {{ isValidating() ? 'Validating...' : 'Validate' }}
+        </button>
+      </div>
+    </section>
+
+    @if (errorMessage(); as message) {
+      <section class="panel error-panel">
+        <p class="section-label">Validation error</p>
+        <p class="error-message">{{ message }}</p>
+      </section>
+    }
+
+    @if (validationResult(); as result) {
+      <section class="panel results-panel">
+        <div class="results-header">
+          <div>
+            <p class="section-label">Findings</p>
+            <h2>{{ result.schema.title.replace('Rules for Peppol ', '') }}</h2>
+          </div>
+
+          @if (summary(); as stats) {
+            <div class="status-strip">
+              <div class="status-item status-item-primary">
+                <strong>{{ stats.total }}</strong>
+                <span>Issues</span>
+              </div>
+              <div class="status-item">
+                <strong>{{ stats.fatalCount }}</strong>
+                <span>Fatal</span>
+              </div>
+              <div class="status-item">
+                <strong>{{ stats.warningCount }}</strong>
+                <span>Warnings</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (!issues().length) {
+          <div class="empty-state">
+            <p>No Schematron findings.</p>
+          </div>
+        } @else {
+          <div class="issue-list" role="list">
+            @for (issue of issues(); track trackIssue($index, issue)) {
+              <article class="issue-item" role="listitem">
+                <div class="issue-topline">
+                  <span class="severity" [class.warning]="issue.severity === 'warning'">
+                    {{ issue.severity }}
+                  </span>
+                  <strong>{{ issue.id }}</strong>
+                </div>
+
+                <div class="issue-grid">
+                  <p class="issue-message">{{ issue.message }}</p>
+
+                  <div class="issue-meta">
+                    <span class="issue-label">Location</span>
+                    <p class="issue-detail">{{ issue.location }}</p>
+                  </div>
+
+                  <div class="issue-meta">
+                    <span class="issue-label">Rule</span>
+                    <p class="issue-detail">{{ issue.test }}</p>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
+  </main>
+</div>

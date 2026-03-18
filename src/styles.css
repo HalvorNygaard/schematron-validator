@@ -1,0 +1,18 @@
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: 'Aptos', 'Segoe UI Variable', 'Segoe UI', sans-serif;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
