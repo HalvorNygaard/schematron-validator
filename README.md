@@ -1,6 +1,6 @@
 # Schematron Validator
 
-Static Angular app for validating Peppol XML documents against the Schematron files in `Schemas/`.
+Client-side Angular app for validating Peppol XML documents against the Schematron files in `Schemas/`.
 
 ## Development
 
@@ -9,10 +9,18 @@ npm install
 npm start
 ```
 
+`npm start` prepares the SaxonJS runtime assets and serves the app as a standard Angular SPA.
+
+## Production build
+
+```bash
+npm run build
+```
+
 ## GitHub Pages build
 
 ```bash
-npm run build:ghpages
+npm run build:pages
 ```
 
-This generates a static build in `docs/` with the browser-side SaxonJS runtime and generated schema registry assets.
+GitHub Actions publishes `dist/schematron-validator/browser` to Pages and injects the correct repository base path at build time.

@@ -236,7 +236,7 @@
   }
 
   async function fetchJson(relativePath) {
-    const response = await fetch(relativePath);
+    const response = await fetch(new URL(relativePath, document.baseURI));
     if (!response.ok) {
       throw new Error(`Failed loading runtime asset: ${relativePath}`);
     }

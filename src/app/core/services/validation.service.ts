@@ -13,7 +13,7 @@ declare global {
 @Injectable({
   providedIn: 'root',
 })
-export class ValidationApiService {
+export class ValidationService {
   async validate(xml: string): Promise<ValidationResponse> {
     const validator = window.saxonJsValidator;
 

@@ -5,8 +5,13 @@ on:
     branches: [main]
 
 permissions:
+  contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -14,6 +19,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,13 +32,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (ghpages)
-        run: npm run build:ghpages
+      - name: Build
+        run: npm run build -- --configuration production --base-href "${{ steps.pages.outputs.base_path }}/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs/browser
+          path: ./dist/schematron-validator/browser
 
   deploy:
     needs: build
