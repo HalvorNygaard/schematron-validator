@@ -16,6 +16,19 @@ import {
   type LocalDocumentHint,
   prettyPrintXml,
 } from './xml-editor.utils';
+import { parseXPathLocation, type XPathSegment } from './xpath-location.utils';
+
+export type Theme = 'dark' | 'light';
+
+const THEME_KEY = 'sv-theme';
+
+function resolveInitialTheme(): Theme {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored === 'dark' || stored === 'light') {
+    return stored;
+  }
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
 
 @Component({
   selector: 'app-root',
@@ -27,6 +40,8 @@ import {
 })
 export class App {
   private readonly validationService = inject(ValidationService);
+
+  protected readonly theme = signal<Theme>(resolveInitialTheme());
 
   protected readonly xmlInput = signal('');
   protected readonly selectedFileName = signal<string | null>(null);
@@ -44,9 +59,30 @@ export class App {
   protected readonly summary = computed(() => this.validationResult()?.summary ?? null);
   protected readonly issues = computed(() => this.validationResult()?.issues ?? []);
 
+  protected toggleTheme(): void {
+    const next: Theme = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(next);
+    localStorage.setItem(THEME_KEY, next);
+  }
+
+  protected parseLocation(xpath: string): XPathSegment[] {
+    return parseXPathLocation(xpath);
+  }
+
   protected onXmlInput(event: Event): void {
     const value = (event.target as HTMLTextAreaElement).value;
     this.xmlInput.set(value);
+    this.errorMessage.set(null);
+    this.validationResult.set(null);
+  }
+
+  protected onXmlPaste(event: ClipboardEvent): void {
+    const text = event.clipboardData?.getData('text') ?? '';
+    if (!text) return;
+
+    event.preventDefault();
+    const formatted = prettyPrintXml(text) ?? text;
+    this.xmlInput.set(formatted);
     this.errorMessage.set(null);
     this.validationResult.set(null);
   }

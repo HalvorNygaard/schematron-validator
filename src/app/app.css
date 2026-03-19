@@ -1,76 +1,139 @@
+/* ─── Design Tokens ─────────────────────────────────────────────────────────── */
+
 :host {
   display: block;
 }
 
+/* ─── Shared tokens (radius, font) ──────────────────────────────────────────── */
 .shell {
-  min-height: 100dvh;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(190, 218, 255, 0.45), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(255, 221, 232, 0.38), transparent 28%),
-    linear-gradient(180deg, #f7f3ec 0%, #f2ede6 100%);
-  color: #162033;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --mono:
+    'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono',
+    monospace;
 }
+
+/* ─── Dark theme — Gruvbox Dark ─────────────────────────────────────────────── */
+.shell,
+.shell.dark {
+  /* Gruvbox dark surfaces */
+  --bg: #1d2021;
+  --surface-0: #282828;
+  --surface-1: #282828;
+  --surface-2: #32302f;
+  --surface-3: #3c3836;
+  --border: rgba(168, 153, 132, 0.12);
+  --border-subtle: rgba(168, 153, 132, 0.07);
+  --border-focus: rgba(168, 153, 132, 0.28);
+
+  /* Gruvbox dark text (fg1, fg2, fg4) */
+  --text-primary: #ebdbb2;
+  --text-secondary: #a89984;
+  --text-tertiary: #665c54;
+
+  /* Gruvbox yellow as accent */
+  --accent: #d79921;
+  --accent-hover: #fabd2f;
+
+  /* Gruvbox red for fatal */
+  --fatal-bg: rgba(204, 36, 29, 0.12);
+  --fatal-text: #fb4934;
+  --fatal-border: rgba(204, 36, 29, 0.28);
+
+  /* Gruvbox orange for warning */
+  --warning-bg: rgba(214, 93, 14, 0.1);
+  --warning-text: #fe8019;
+  --warning-border: rgba(214, 93, 14, 0.28);
+
+  /* Gruvbox green for success */
+  --success-text: #b8bb26;
+
+  /* Gruvbox dark syntax tokens */
+  --token-punctuation: #928374;
+  --token-tag: #e07a5f;
+  --token-attr-name: #fabd2f;
+  --token-attr-value: #b8bb26;
+  --token-comment: #7c6f64;
+
+  color-scheme: dark;
+}
+
+/* ─── Light theme — Gruvbox Light ───────────────────────────────────────────── */
+.shell.light {
+  /* Toned-down light surfaces — less sepia, more neutral warm-white */
+  --bg: #edeae0;
+  --surface-0: #f5f2ea;
+  --surface-1: #f5f2ea;
+  --surface-2: #edeae0;
+  --surface-3: #e2dfd4;
+  --border: rgba(102, 92, 84, 0.14);
+  --border-subtle: rgba(102, 92, 84, 0.08);
+  --border-focus: rgba(102, 92, 84, 0.3);
+
+  /* Gruvbox light text (fg1, fg2, fg4) */
+  --text-primary: #3c3836;
+  --text-secondary: #7c6f64;
+  --text-tertiary: #a89984;
+
+  /* Gruvbox yellow as accent */
+  --accent: #b57614;
+  --accent-hover: #d79921;
+
+  /* Gruvbox red for fatal */
+  --fatal-bg: rgba(157, 0, 6, 0.07);
+  --fatal-text: #9d0006;
+  --fatal-border: rgba(157, 0, 6, 0.2);
+
+  /* Gruvbox orange for warning */
+  --warning-bg: rgba(175, 58, 3, 0.07);
+  --warning-text: #af3a03;
+  --warning-border: rgba(175, 58, 3, 0.2);
+
+  /* Gruvbox green for success */
+  --success-text: #79740e;
+
+  /* Gruvbox light syntax tokens */
+  --token-punctuation: #928374;
+  --token-tag: #9d0006;
+  --token-attr-name: #b57614;
+  --token-attr-value: #79740e;
+  --token-comment: #a89984;
+
+  color-scheme: light;
+}
+
+/* ─── Shell base ─────────────────────────────────────────────────────────────── */
+.shell {
+  display: block;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family:
+    'Geist',
+    'Inter',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ─── Page Layout ────────────────────────────────────────────────────────────── */
 
 .page {
-  width: min(1680px, calc(100% - 32px));
+  width: min(1400px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 20px 0 34px;
-}
-
-.panel {
-  border: 1px solid rgba(22, 32, 51, 0.07);
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow:
-    0 20px 48px rgba(22, 32, 51, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(18px);
-}
-
-.composer {
-  padding: 22px;
-  min-height: calc(100dvh - 40px);
+  padding: 24px 0 64px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-.results-panel,
-.error-panel {
-  margin-top: 16px;
-  padding: 20px 22px;
-}
-
-.panel-header,
-.header-main,
-.header-chips,
-.toolbar-actions,
-.results-header,
-.status-strip,
-.issue-topline,
-.issue-grid {
-  display: flex;
-  gap: 14px;
-}
-
-.panel-header,
-.results-header {
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-main {
-  align-items: center;
-  gap: 20px;
-  min-width: 0;
-}
-
-.header-chips,
-.toolbar-actions,
-.status-strip {
-  align-items: center;
-  flex-wrap: wrap;
-}
+/* ─── Typography ─────────────────────────────────────────────────────────────── */
 
 h1,
 h2,
@@ -78,63 +141,88 @@ p {
   margin: 0;
 }
 
-h1,
-h2 {
-  letter-spacing: -0.04em;
-}
-
 h1 {
-  font-size: clamp(2.15rem, 2.8vw, 3.1rem);
-  font-weight: 650;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 h2 {
-  font-size: 1.42rem;
-  font-weight: 620;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
-.section-label,
-.schema-meta,
-.dropzone-note,
-.status-item span,
-.issue-detail,
-.issue-label,
-.error-message,
-.empty-state {
-  color: #627085;
+/* ─── Panel (shared card surface) ───────────────────────────────────────────── */
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface-1);
 }
 
-.section-label {
-  margin-bottom: 6px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* ─── Composer Panel ─────────────────────────────────────────────────────────── */
+
+.composer {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.schema-meta {
-  margin-top: 6px;
-  font-size: 0.9rem;
-  color: #627085;
+/* ─── Panel Header ───────────────────────────────────────────────────────────── */
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
 }
 
-.chip,
-.ghost-button,
-.primary-button,
-.status-item,
-.severity,
-.empty-state,
-.issue-item {
-  border-radius: 18px;
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
+
+.header-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ─── Chips ──────────────────────────────────────────────────────────────────── */
 
 .chip {
-  border: 1px solid rgba(22, 32, 51, 0.08);
-  background: rgba(255, 255, 255, 0.72);
-  padding: 8px 12px;
-  font-size: 0.86rem;
-  color: #465468;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
 }
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
 
 .ghost-button,
 .primary-button {
@@ -142,346 +230,502 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid rgba(22, 32, 51, 0.08);
-  background: rgba(255, 255, 255, 0.7);
-  color: #162033;
-  font-weight: 600;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 500;
   text-decoration: none;
   transition:
-    transform 0.16s ease,
-    border-color 0.16s ease,
-    box-shadow 0.16s ease;
+    background 0.1s ease,
+    border-color 0.1s ease,
+    color 0.1s ease;
+  white-space: nowrap;
 }
 
-.ghost-button:hover,
-.primary-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(22, 32, 51, 0.14);
-  box-shadow: 0 10px 24px rgba(22, 32, 51, 0.08);
+.ghost-button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.ghost-button:hover {
+  background: var(--surface-3);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
 }
 
 .primary-button {
-  border: 0;
-  background: linear-gradient(135deg, #1c2940 0%, #121a2a 100%);
-  color: #fff;
-  min-width: 126px;
+  border: 1px solid var(--border-focus);
+  background: var(--surface-3);
+  color: var(--text-primary);
+  min-width: 96px;
+  height: 34px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .primary-button:disabled {
   cursor: wait;
-  opacity: 0.74;
+  opacity: 0.5;
 }
+
+/* ─── Actions bar ────────────────────────────────────────────────────────────── */
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 14px;
 }
+
+/* ─── Dropzone ───────────────────────────────────────────────────────────────── */
 
 .dropzone {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  margin-top: 14px;
-  min-height: 0;
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.18s ease;
+  gap: 8px;
+  cursor: text;
 }
 
-.dropzone.dragging {
-  transform: translateY(-1px);
+.dropzone.dragging .editor-grid {
+  border-color: var(--accent);
+  background: rgba(94, 106, 210, 0.04);
 }
+
+/* ─── Editor Grid ────────────────────────────────────────────────────────────── */
+
+/*
+  Layout: fixed line-number column | fill editor column
+  The highlight <pre> and the <textarea> both sit in the same grid cell
+  using position:absolute so they are pixel-perfect aligned.
+*/
 
 .editor-grid {
-  position: relative;
   display: grid;
-  flex: 1;
-  grid-template-columns: 58px minmax(0, 1fr);
-  height: clamp(720px, calc(100dvh - 210px), 1200px);
-  border: 1px solid rgba(22, 32, 51, 0.08);
-  border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 252, 0.98)), #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.88),
-    0 20px 34px rgba(22, 32, 51, 0.05);
+  grid-template-columns: 48px 1fr;
+  grid-template-rows: 1fr;
+  height: clamp(420px, calc(100dvh - 240px), 1000px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-0);
   overflow: hidden;
+  transition: border-color 0.15s ease;
 }
 
+.editor-grid:focus-within {
+  border-color: var(--border-focus);
+}
+
+/* ─── Line Numbers ───────────────────────────────────────────────────────────── */
+
 .line-numbers {
-  height: 100%;
-  border-right: 1px solid rgba(22, 32, 51, 0.06);
-  background: rgba(244, 247, 250, 0.86);
-  color: #9aa6b8;
-  font:
-    500 0.9rem/1.78 'Cascadia Code',
-    'SFMono-Regular',
-    Consolas,
-    monospace;
+  grid-column: 1;
+  grid-row: 1;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--surface-0);
+  color: var(--text-tertiary);
+  font: 500 0.8125rem / 1.75 var(--mono);
   text-align: right;
-  padding: 24px 10px 36px 6px;
+  padding: 16px 10px 16px 0;
   overflow: hidden;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .line-numbers span {
   display: block;
 }
 
-.xml-highlight,
-.xml-input {
+/* ─── Editor Cell ────────────────────────────────────────────────────────────── */
+
+/*
+  Both .xml-highlight and .xml-input occupy the same grid cell (column 2, row 1).
+  They are both position:absolute relative to .editor-cell — a position:relative
+  wrapper. This eliminates ALL offset drift between cursor and rendered text
+  because both elements have identical geometry, padding, font, and line-height.
+*/
+
+.editor-cell {
   grid-column: 2;
   grid-row: 1;
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-  margin: 0;
-  border: 0;
-  font:
-    500 0.99rem/1.78 'Cascadia Code',
-    'SFMono-Regular',
-    Consolas,
-    monospace;
-  letter-spacing: 0.004em;
-  tab-size: 4;
-  white-space: pre;
-  padding: 24px 24px 36px 18px;
-}
-
-.xml-highlight {
-  position: absolute;
-  inset: 0 0 0 58px;
-  pointer-events: none;
-  color: #1e293b;
+  position: relative;
   overflow: hidden;
 }
 
+.xml-highlight,
 .xml-input {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  padding: 16px 20px 16px 14px;
+  font: 500 0.8125rem / 1.75 var(--mono);
+  letter-spacing: 0;
+  tab-size: 4;
+  white-space: pre;
+  overflow: auto;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.xml-highlight {
+  pointer-events: none;
+  color: var(--text-primary);
+  background: transparent;
+  /* Scrollbars hidden on highlight layer to avoid double rendering */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.xml-highlight::-webkit-scrollbar {
+  display: none;
+}
+
+.xml-input {
   z-index: 1;
   background: transparent;
   color: transparent;
-  caret-color: #162033;
+  caret-color: var(--text-primary);
   resize: none;
   outline: none;
-  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
   -webkit-text-fill-color: transparent;
 }
 
 .xml-input::selection {
-  background: rgba(125, 211, 252, 0.22);
+  background: rgba(94, 106, 210, 0.25);
 }
 
+.xml-input::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.xml-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.xml-input::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 4px;
+}
+
+/* ─── XML Syntax Tokens ──────────────────────────────────────────────────────── */
+
 .xml-highlight .token.punctuation {
-  color: #2563eb;
+  color: var(--token-punctuation);
 }
 
 .xml-highlight .token.tag {
-  color: #0f172a;
+  color: var(--token-tag);
   font-weight: 600;
 }
 
 .xml-highlight .token.attr-name {
-  color: #7c3aed;
+  color: var(--token-attr-name);
 }
 
 .xml-highlight .token.attr-value {
-  color: #047857;
+  color: var(--token-attr-value);
 }
 
 .xml-highlight .token.comment {
-  color: #94a3b8;
+  color: var(--token-comment);
   font-style: italic;
 }
 
+/* ─── Theme toggle ───────────────────────────────────────────────────────────── */
+
+.theme-toggle {
+  width: 32px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* ─── Dropzone hint ──────────────────────────────────────────────────────────── */
+
 .dropzone-note {
   display: block;
-  margin-top: 10px;
-  padding-inline: 4px;
-  font-size: 0.84rem;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  padding-left: 2px;
+}
+
+/* ─── Results Panel ──────────────────────────────────────────────────────────── */
+
+.results-panel,
+.error-panel {
+  padding: 20px;
 }
 
 .results-header {
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
+/* ─── Section label ──────────────────────────────────────────────────────────── */
+
+.section-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+/* ─── Schema meta ────────────────────────────────────────────────────────────── */
+
+.schema-meta {
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* ─── Status Strip ───────────────────────────────────────────────────────────── */
+
 .status-strip {
-  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .status-item {
-  min-width: 78px;
-  padding: 10px 12px;
-  background: rgba(244, 247, 250, 0.92);
+  min-width: 64px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
   text-align: center;
 }
 
 .status-item strong {
   display: block;
-  font-size: 1.02rem;
-  color: #162033;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .status-item span {
-  font-size: 0.8rem;
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-top: 1px;
 }
 
-.status-item-primary {
-  background: rgba(232, 240, 251, 0.96);
+.status-item-primary strong {
+  color: var(--accent);
 }
 
-.empty-state,
-.issue-item,
-.error-panel {
-  border: 1px solid rgba(22, 32, 51, 0.08);
-}
+/* ─── Empty state ────────────────────────────────────────────────────────────── */
 
 .empty-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 16px;
-  padding: 16px 18px;
-  background: rgba(247, 249, 251, 0.84);
+  padding: 14px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font-size: 0.875rem;
+  color: var(--success-text);
 }
 
+/* ─── Issue List ─────────────────────────────────────────────────────────────── */
+
 .issue-list {
-  margin-top: 16px;
-  display: grid;
-  gap: 10px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .issue-item {
-  background: rgba(255, 255, 255, 0.72);
-  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  padding: 14px 16px;
+  transition: border-color 0.12s ease;
 }
 
+.issue-item:hover {
+  border-color: var(--border-focus);
+}
+
+/* Issue top line */
+.issue-topline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.issue-topline strong {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+}
+
+/* Severity badge */
 .severity {
-  padding: 6px 10px;
-  background: #fff1f2;
-  color: #be123c;
-  font-size: 0.74rem;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  background: var(--fatal-bg);
+  color: var(--fatal-text);
+  border: 1px solid var(--fatal-border);
 }
 
 .severity.warning {
-  background: #fff7ed;
-  color: #c2410c;
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  border-color: var(--warning-border);
 }
 
+/* Issue body */
 .issue-grid {
+  display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
 }
 
 .issue-message {
-  line-height: 1.56;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-primary);
 }
 
 .issue-meta {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   padding-top: 10px;
-  border-top: 1px solid rgba(22, 32, 51, 0.06);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .issue-label {
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 .issue-detail {
-  font:
-    0.88rem/1.55 'Cascadia Code',
-    'SFMono-Regular',
-    Consolas,
-    monospace;
+  font: 0.8125rem / 1.55 var(--mono);
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
-.error-message {
-  line-height: 1.58;
+/* ─── XPath breadcrumb ───────────────────────────────────────────────────────── */
+
+.xpath-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 4px;
+  font: 0.8125rem / 1.6 var(--mono);
+  color: var(--text-secondary);
 }
 
-@media (max-width: 1100px) {
+.xpath-sep {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.xpath-local {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ─── Error Panel ────────────────────────────────────────────────────────────── */
+
+.error-panel {
+  border-color: var(--fatal-border);
+  background: var(--fatal-bg);
+}
+
+.error-message {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--fatal-text);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .page {
+    width: calc(100% - 24px);
+    padding: 16px 0 32px;
+  }
+
   .panel-header,
   .results-header {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .header-main {
-    flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
 
   .toolbar-actions,
   .status-strip {
     justify-content: flex-start;
-  }
-}
-
-@media (max-width: 900px) {
-  .page {
-    width: min(100%, calc(100% - 18px));
-    padding-top: 14px;
-  }
-
-  .composer,
-  .results-panel,
-  .error-panel {
-    padding: 16px;
-  }
-
-  .composer {
-    min-height: calc(100dvh - 24px);
+    flex-wrap: wrap;
   }
 
   .editor-grid {
-    grid-template-columns: 58px minmax(0, 1fr);
-    height: clamp(620px, calc(100dvh - 170px), 980px);
-  }
-
-  .line-numbers {
-    padding-inline: 6px 8px;
-  }
-
-  .xml-highlight,
-  .xml-input {
-    height: 100%;
-    min-height: 100%;
-    padding-inline: 16px 18px;
-  }
-
-  .xml-highlight {
-    inset-inline-start: 58px;
+    height: clamp(300px, calc(100dvh - 200px), 640px);
   }
 }
 
 @media (max-width: 640px) {
   h1 {
-    font-size: 1.9rem;
+    font-size: 1rem;
   }
 
-  .toolbar-actions {
-    width: 100%;
+  .composer {
+    padding: 14px;
   }
 
   .ghost-button,
   .primary-button {
-    width: 100%;
+    flex: 1;
   }
 
   .editor-grid {
-    height: clamp(520px, calc(100dvh - 150px), 760px);
+    grid-template-columns: 36px 1fr;
+    height: clamp(280px, calc(100dvh - 180px), 520px);
   }
 
+  .line-numbers {
+    font-size: 0.6875rem;
+    padding-right: 6px;
+  }
+}
+
+@media (max-width: 440px) {
   .line-numbers {
     display: none;
   }
@@ -490,15 +734,7 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .xml-highlight,
-  .xml-input {
+  .editor-cell {
     grid-column: 1;
-    height: 100%;
-    min-height: 100%;
-    padding-inline: 18px;
-  }
-
-  .xml-highlight {
-    inset-inline-start: 0;
   }
 }
