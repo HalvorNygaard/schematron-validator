@@ -10,6 +10,9 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const SCHEMAS_DIR = path.join(ROOT_DIR, 'Schemas');
 const RUNTIME_DIR = path.join(ROOT_DIR, 'public', 'runtime');
 const SAXON_JS_RUNTIME = path.join(RUNTIME_DIR, 'SaxonJS2.rt.js');
+const SAXON_JS_RUNTIME_URL =
+  process.env.SAXON_JS_RUNTIME_URL ??
+  'https://www.saxonica.com/saxon-js/documentation/SaxonJS/SaxonJS2.rt.js';
 const NODE_XSL_SCHEMATRON_DIR = path.join(ROOT_DIR, 'node_modules', 'node-xsl-schematron');
 const XSLT3_BIN = path.join(ROOT_DIR, 'node_modules', 'xslt3', 'xslt3.js');
 
@@ -49,7 +52,7 @@ await Promise.all(
 );
 
 await fs.mkdir(RUNTIME_DIR, { recursive: true });
-await assertPathExists(SAXON_JS_RUNTIME, 'Vendored SaxonJS browser runtime');
+await ensureBrowserRuntime();
 await Promise.all([
   ...RUNTIME_STYLESHEETS.map(({ outputFileName, stylesheetPath }) =>
     compileRuntimeAsset(outputFileName, stylesheetPath),
@@ -83,6 +86,24 @@ async function compileRuntimeAsset(outputFileName, stylesheetPath) {
         : `Failed generating ${outputFileName}.`,
     );
   }
+}
+
+async function ensureBrowserRuntime() {
+  try {
+    await fs.access(SAXON_JS_RUNTIME, constants.F_OK);
+    return;
+  } catch {}
+
+  const response = await fetch(SAXON_JS_RUNTIME_URL);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed downloading SaxonJS browser runtime from ${SAXON_JS_RUNTIME_URL}. ` +
+        `Received ${response.status} ${response.statusText}.`,
+    );
+  }
+
+  await fs.writeFile(SAXON_JS_RUNTIME, Buffer.from(await response.arrayBuffer()));
 }
 
 async function writeSchemaRegistry() {

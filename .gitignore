@@ -14,7 +14,6 @@ yarn-error.log
 SaxonJS-2.7.zip
 saxon-js/
 saxonjs-he-*.tgz
-public/runtime/SaxonJS2.rt.js
 public/runtime/pipeline-for-svrl.sef.json
 public/runtime/runner.sef.json
 public/runtime/schema-registry.json
