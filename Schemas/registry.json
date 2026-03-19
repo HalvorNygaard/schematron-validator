@@ -1,0 +1,287 @@
+[
+  {
+    "id": "peppol-order",
+    "source": "peppol",
+    "displayTitle": "Peppol Order",
+    "documentType": "Order",
+    "transactionCode": "T01",
+    "schematrons": ["PEPPOLBIS-T01.sch"],
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:order_only:3",
+      "urn:fdc:peppol.eu:poacc:bis:ordering:3",
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order:3"]
+  },
+  {
+    "id": "peppol-order-agreement",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Agreement",
+    "documentType": "OrderResponse",
+    "transactionCode": "T110",
+    "schematrons": ["PEPPOLBIS-T110.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:order_agreement:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order_agreement:3"]
+  },
+  {
+    "id": "peppol-invoice-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Invoice Response",
+    "documentType": "ApplicationResponse",
+    "transactionCode": "T111",
+    "schematrons": ["PEPPOLBIS-T111.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:invoice_response:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:invoice_response:3"]
+  },
+  {
+    "id": "peppol-order-change",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Change",
+    "documentType": "OrderChange",
+    "transactionCode": "T114",
+    "schematrons": ["PEPPOLBIS-T114.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"],
+    "customizationIds": ["urn:fdc:peppol.eu:poacc:trns:order_change:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order_change:3"]
+  },
+  {
+    "id": "peppol-order-cancellation",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Cancellation",
+    "documentType": "OrderCancellation",
+    "transactionCode": "T115",
+    "schematrons": ["PEPPOLBIS-T115.sch"],
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:ordering:3",
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order_cancellation:3"]
+  },
+  {
+    "id": "peppol-advanced-order-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Advanced Order Response",
+    "documentType": "OrderResponse",
+    "transactionCode": "T116",
+    "schematrons": ["PEPPOLBIS-T116.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order_response_advanced:3"]
+  },
+  {
+    "id": "peppol-catalogue",
+    "source": "peppol",
+    "displayTitle": "Peppol Catalogue",
+    "documentType": "Catalogue",
+    "transactionCode": "T16",
+    "schematrons": ["PEPPOLBIS-T16.sch"],
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:catalogue:3",
+      "urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"
+    ],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:catalogue:3"]
+  },
+  {
+    "id": "peppol-catalogue-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Catalogue Response",
+    "documentType": "CatalogueResponse",
+    "transactionCode": "T19",
+    "schematrons": ["PEPPOLBIS-T19.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:catalogue_response:3"]
+  },
+  {
+    "id": "peppol-mlr-response",
+    "source": "peppol",
+    "displayTitle": "Peppol MLR Response",
+    "documentType": "ApplicationResponse",
+    "transactionCode": "T58",
+    "schematrons": ["PEPPOLBIS-T58.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:mlr:3"]
+  },
+  {
+    "id": "peppol-message-level-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Message Level Response",
+    "documentType": "ApplicationResponse",
+    "transactionCode": "T71",
+    "schematrons": ["PEPPOLBIS-T71.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:mlr:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:mlr:3"]
+  },
+  {
+    "id": "peppol-order-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Response",
+    "documentType": "OrderResponse",
+    "transactionCode": "T76",
+    "schematrons": ["PEPPOLBIS-T76.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:ordering:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:order_response:3"]
+  },
+  {
+    "id": "peppol-despatch-advice",
+    "source": "peppol",
+    "displayTitle": "Peppol Despatch Advice",
+    "documentType": "DespatchAdvice",
+    "transactionCode": "T77",
+    "schematrons": ["PEPPOLBIS-T77.sch"],
+    "profileIds": ["urn:fdc:peppol.eu:poacc:bis:despatch_advice:3"],
+    "customizationPrefixes": ["urn:fdc:peppol.eu:poacc:trns:despatch_advice:3"]
+  },
+  {
+    "id": "ehf-order",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order 3.0",
+    "documentType": "Order",
+    "transactionCode": "EHF-ORDER-3.0",
+    "schematrons": ["ehf-postaward-g3/ordering-3.0/EHF-ORDER-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:02:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-order-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order Response 3.0",
+    "documentType": "OrderResponse",
+    "transactionCode": "EHF-T76",
+    "schematrons": ["ehf-postaward-g3/ordering-3.0/EHF-ORDER-RESPONSE-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:02:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-order-agreement",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order Agreement 3.0",
+    "documentType": "OrderResponse",
+    "transactionCode": "EHF-T110",
+    "schematrons": ["ehf-postaward-g3/order-agreement-3.0/EHF-ORDER-AGREEMENT-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:03:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_agreement:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-despatch-advice",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Despatch Advice 3.0",
+    "documentType": "DespatchAdvice",
+    "transactionCode": "EHF-DESPATCH-3.0",
+    "schematrons": ["ehf-postaward-g3/despatch-advice-3.0/EHF-DESPATCH-ADVICE-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:05:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-order-change",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Change 3.0",
+    "documentType": "OrderChange",
+    "transactionCode": "EHF-P09-CHANGE",
+    "schematrons": ["ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-CHANGE.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"],
+    "customizationIds": ["urn:fdc:anskaffelser.no:2019:ehf:spec:adv-order-change:3.0"]
+  },
+  {
+    "id": "ehf-order-cancellation",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Cancellation 3.0",
+    "documentType": "OrderCancellation",
+    "transactionCode": "EHF-P09-CANCEL",
+    "schematrons": ["ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-CANCELLATION.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"],
+    "customizationIds": ["urn:fdc:anskaffelser.no:2019:ehf:spec:adv-order-cancellation:3.0"]
+  },
+  {
+    "id": "ehf-advanced-order-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Response 3.0",
+    "documentType": "OrderResponse",
+    "transactionCode": "EHF-P09-RESPONSE",
+    "schematrons": ["ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-RESPONSE.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-order-initiation",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Initiation 3.0",
+    "documentType": "Order",
+    "transactionCode": "EHF-P09-ORDER",
+    "schematrons": ["ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-INITIATION.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-catalogue",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Catalogue 3.0",
+    "documentType": "Catalogue",
+    "transactionCode": "EHF-CATALOGUE-3.0",
+    "schematrons": ["ehf-postaward-g3/catalogue-3.0/EHF-CATALOGUE-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:01:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-catalogue-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Catalogue Response 3.0",
+    "documentType": "ApplicationResponse",
+    "transactionCode": "EHF-T58",
+    "schematrons": ["ehf-postaward-g3/catalogue-3.0/EHF-CATALOGUE-RESPONSE-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:01:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-punch-out",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Punch Out 3.0",
+    "documentType": "Catalogue",
+    "transactionCode": "EHF-PUNCH-OUT-3.0",
+    "schematrons": ["ehf-postaward-g3/punch-out-3.0/EHF-PUNCH-OUT-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:04:1.0"],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:punch_out:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ]
+  },
+  {
+    "id": "ehf-reminder",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Reminder 3.0",
+    "documentType": "Invoice",
+    "transactionCode": "EHF-P06",
+    "schematrons": [
+      "ehf-postaward-g3/reminder-3.0/REMINDER-CEN-EN16931-UBL.sch",
+      "ehf-postaward-g3/reminder-3.0/REMINDER-PEPPOL-EN16931-UBL.sch",
+      "ehf-postaward-g3/reminder-3.0/EHF-P06-3.0-REMINDER.sch"
+    ],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:06:1.0"],
+    "customizationIds": [
+      "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0#conformant#urn:fdc:anskaffelser.no:2019:ehf:reminder:3.0"
+    ]
+  },
+  {
+    "id": "ehf-payment-request",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Payment Request 3.0",
+    "documentType": "Invoice",
+    "transactionCode": "EHF-P07",
+    "schematrons": ["ehf-postaward-g3/payment-request-3.0/EHF-P07-3.0-PAYMENT-REQUEST-3.0.sch"],
+    "profileIds": ["urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:07:1.0"],
+    "customizationIds": ["urn:fdc:anskaffelser.no:2019:ehf:spec:payment-request:3.0"]
+  }
+]

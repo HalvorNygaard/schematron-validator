@@ -15,17 +15,84 @@
     validate,
   };
 
+  function matchRuntimeSchema(document, schemas) {
+    const rootMatches = schemas.filter(
+      (schema) =>
+        schema.documentType === document.rootElement &&
+        (!document.namespaceUri ||
+          !schema.namespaceUri ||
+          schema.namespaceUri === document.namespaceUri),
+    );
+
+    if (!rootMatches.length) {
+      throw new Error(`No schematron mapping exists for root element '${document.rootElement}'.`);
+    }
+
+    const customizationMatches = narrowByCustomization(rootMatches, document.customizationId);
+    const profileMatches = narrowByProfile(customizationMatches, document.profileId);
+
+    if (!profileMatches.length) {
+      throw new Error(
+        `No schematron matched ${document.rootElement} with the provided CustomizationID/ProfileID.`,
+      );
+    }
+
+    if (profileMatches.length > 1) {
+      throw new Error(
+        `Multiple schematron files matched ${document.rootElement}. Provide a more specific CustomizationID/ProfileID.`,
+      );
+    }
+
+    return profileMatches[0];
+  }
+
+  function narrowByCustomization(schemas, customizationId) {
+    if (!customizationId) {
+      return schemas;
+    }
+
+    const exactMatches = schemas.filter((schema) =>
+      schema.customizationIds.includes(customizationId),
+    );
+    if (exactMatches.length) {
+      return exactMatches;
+    }
+
+    const prefixMatches = schemas.filter((schema) =>
+      schema.customizationPrefixes.some((prefix) => customizationId.startsWith(prefix)),
+    );
+    if (prefixMatches.length) {
+      return prefixMatches;
+    }
+
+    return schemas.filter(
+      (schema) => !schema.customizationIds.length && !schema.customizationPrefixes.length,
+    );
+  }
+
+  function narrowByProfile(schemas, profileId) {
+    if (!profileId) {
+      return schemas;
+    }
+
+    const exactMatches = schemas.filter((schema) => schema.profileIds.includes(profileId));
+    if (exactMatches.length) {
+      return exactMatches;
+    }
+
+    return schemas.filter((schema) => !schema.profileIds.length);
+  }
+
   async function validate(xml) {
     const document = parseDocument(xml);
-    const schemas = await loadSchemaRegistry();
-    const schema = matchSchema(document, schemas);
-    const validator = await compileValidator(schema);
-    const rawIssues = await runValidator(validator, xml);
-    const issues = rawIssues.map(normalizeIssue).sort(compareSeverity);
+    const profiles = await loadSchemaRegistry();
+    const profile = matchRuntimeSchema(document, profiles);
+    const validators = await loadValidators(profile);
+    const issues = await collectIssues(validators, profile.schematrons, xml);
 
     return {
       document,
-      schema: toPublicSchema(schema),
+      schema: toPublicSchema(profile),
       issues,
       summary: summarizeIssues(issues),
     };
@@ -41,17 +108,20 @@
     return runtimeState.resultsPromise;
   }
 
-  async function compileValidator(schema) {
-    const cached = runtimeState.validatorPromises.get(schema.transactionCode);
+  async function loadValidators(schema) {
+    const cached = runtimeState.validatorPromises.get(schema.id);
     if (!cached) {
-      runtimeState.validatorPromises.set(schema.transactionCode, loadValidator(schema));
+      runtimeState.validatorPromises.set(
+        schema.id,
+        Promise.all(schema.schematrons.map(loadValidator)),
+      );
     }
 
-    return runtimeState.validatorPromises.get(schema.transactionCode);
+    return runtimeState.validatorPromises.get(schema.id);
   }
 
-  async function loadValidator(schema) {
-    return fetchJson(schema.validatorAsset);
+  async function loadValidator(schematron) {
+    return fetchJson(schematron.validatorAsset);
   }
 
   async function runValidator(validator, xml) {
@@ -76,6 +146,17 @@
     );
 
     return Array.isArray(principalResult) ? principalResult : [];
+  }
+
+  async function collectIssues(validators, schematrons, xml) {
+    const issues = [];
+
+    for (let index = 0; index < validators.length; index += 1) {
+      const rawIssues = await runValidator(validators[index], xml);
+      issues.push(...rawIssues.map((issue) => normalizeIssue(issue, schematrons[index])));
+    }
+
+    return issues.sort(compareSeverity);
   }
 
   function parseDocument(xml) {
@@ -105,6 +186,7 @@
 
     return {
       rootElement: root.localName,
+      namespaceUri: root.namespaceURI ?? null,
       customizationId: getFirstElementText(root, 'CustomizationID'),
       profileId: getFirstElementText(root, 'ProfileID'),
       hasXmlDeclaration: true,
@@ -116,72 +198,14 @@
     return element?.textContent?.trim() || null;
   }
 
-  function matchSchema(document, schemas) {
-    const candidates = schemas.filter((schema) => schema.documentType === document.rootElement);
-
-    if (!candidates.length) {
-      throw new Error(`No schematron mapping exists for root element '${document.rootElement}'.`);
-    }
-
-    if (candidates.length === 1) {
-      return candidates[0];
-    }
-
-    const scored = candidates
-      .map((schema) => ({ schema, score: scoreSchema(schema, document) }))
-      .sort((left, right) => right.score - left.score);
-
-    const winner = scored[0];
-    const runnerUp = scored[1];
-
-    if (!winner || winner.score < 0) {
-      throw new Error(
-        `No schematron matched ${document.rootElement} with the provided CustomizationID/ProfileID.`,
-      );
-    }
-
-    if (runnerUp && winner.score === runnerUp.score) {
-      throw new Error(
-        `Multiple schematron files matched ${document.rootElement}. Provide a more specific CustomizationID/ProfileID.`,
-      );
-    }
-
-    return winner.schema;
-  }
-
-  function scoreSchema(schema, document) {
-    let score = 10;
-
-    if (document.customizationId) {
-      if (schema.customizationIds.includes(document.customizationId)) {
-        score += 120;
-      } else if (
-        schema.customizationPrefixes.some((prefix) => document.customizationId.startsWith(prefix))
-      ) {
-        score += 110;
-      } else if (schema.customizationIds.length || schema.customizationPrefixes.length) {
-        score -= 90;
-      }
-    }
-
-    if (document.profileId) {
-      if (schema.profileIds.includes(document.profileId)) {
-        score += 80;
-      } else if (schema.profileIds.length) {
-        score -= 60;
-      }
-    }
-
-    return score;
-  }
-
-  function normalizeIssue(issue) {
+  function normalizeIssue(issue, schematron) {
     return {
       id: typeof issue.id === 'string' ? issue.id : 'unknown',
       severity: typeof issue.flag === 'string' ? issue.flag.toLowerCase() : 'info',
       message: typeof issue.text === 'string' ? issue.text : 'Schematron assertion failed.',
       location: typeof issue.location === 'string' ? issue.location : '',
       test: typeof issue.test === 'string' ? issue.test : '',
+      source: schematron?.title ?? schematron?.fileName ?? '',
     };
   }
 
@@ -209,13 +233,13 @@
 
   function toPublicSchema(schema) {
     return {
-      transactionCode: schema.transactionCode,
-      fileName: schema.fileName,
-      title: schema.title,
-      documentType: schema.documentType,
-      namespaceUri: schema.namespaceUri,
-      profileIds: schema.profileIds,
-      customizationPatterns: [...schema.customizationIds, ...schema.customizationPrefixes],
+      id: schema.id,
+      source: schema.source,
+      displayTitle: schema.displayTitle || schema.title,
+      schematrons: schema.schematrons.map((schematron) => ({
+        fileName: schematron.fileName,
+        title: schematron.title,
+      })),
     };
   }
 

@@ -4,6 +4,7 @@ export interface ValidationIssue {
   message: string;
   location: string;
   test: string;
+  source: string;
 }
 
 export interface ValidationSummary {
@@ -21,13 +22,13 @@ export interface ValidationDocument {
 }
 
 export interface MatchedSchema {
-  transactionCode: string;
-  fileName: string;
-  title: string;
-  documentType: string;
-  namespaceUri: string;
-  profileIds: string[];
-  customizationPatterns: string[];
+  id: string;
+  source: string;
+  displayTitle: string;
+  schematrons: Array<{
+    fileName: string;
+    title: string;
+  }>;
 }
 
 export interface ValidationResponse {

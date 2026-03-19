@@ -82,7 +82,13 @@
         <div class="results-header">
           <div>
             <p class="section-label">Findings</p>
-            <h2>{{ result.schema.title.replace('Rules for Peppol ', '') }}</h2>
+            <h2>{{ result.schema.displayTitle }}</h2>
+            <p class="schema-meta">
+              {{ result.schema.source }}
+              @if (result.schema.schematrons.length > 1) {
+                <span>• {{ result.schema.schematrons.length }} rule sets</span>
+              }
+            </p>
           </div>
 
           @if (summary(); as stats) {
@@ -120,6 +126,11 @@
 
                 <div class="issue-grid">
                   <p class="issue-message">{{ issue.message }}</p>
+
+                  <div class="issue-meta">
+                    <span class="issue-label">Schematron</span>
+                    <p class="issue-detail">{{ issue.source }}</p>
+                  </div>
 
                   <div class="issue-meta">
                     <span class="issue-label">Location</span>

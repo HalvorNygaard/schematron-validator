@@ -1,6 +1,8 @@
 # Schematron Validator
 
-Client-side Angular app for validating Peppol XML documents against the Schematron files in `Schemas/`.
+Client-side Angular app for validating Peppol and EHF XML documents against the Schematron files in `Schemas/`.
+
+`Schemas/` is the source of truth. `Schemas/registry.json` explicitly defines which source package, document type, identifiers, and `.sch` stack apply to each profile.
 
 ## Development
 
@@ -9,13 +11,32 @@ npm install
 npm start
 ```
 
-`npm start` prepares the generated runtime assets, downloads the official SaxonJS browser runtime if needed, precompiles browser-safe validator bundles for each Schematron file, and serves the app as a standard Angular SPA.
+`npm start` prepares the generated runtime assets, downloads the official SaxonJS browser runtime if needed, precompiles browser-safe validator bundles for each manifest entry, and serves the app as a standard Angular SPA.
+
+## Schema sources
+
+- `Schemas/*.sch` contains the standalone Peppol source files
+- `Schemas/ehf-postaward-g3/` contains the imported EHF package files
+- `Schemas/registry.json` decides which package and which single-file or multi-file Schematron stack is used for a given document profile
+
+The app does not guess validation stacks from filenames anymore. If a profile needs multiple Schematron layers, list them in order in `Schemas/registry.json`.
 
 ## Production build
 
 ```bash
 npm run build
 ```
+
+The build regenerates `public/runtime/schema-registry.json`, `public/runtime/results.sef.json`, and the compiled validator bundles in `public/runtime/validators/` from the manifest and source `.sch` files.
+
+## Matching rules
+
+- The runtime first matches on the XML root local name and namespace.
+- It then narrows candidates deterministically using explicit `CustomizationID` and `ProfileID` values from `Schemas/registry.json`.
+- Exact `CustomizationID` wins over prefix matches, and both win over unconstrained entries.
+- Exact `ProfileID` then narrows the remaining candidates.
+- If multiple candidates still remain, validation stops with an ambiguity error instead of guessing.
+- For profiles that require layered validation, the `schematrons` array is executed in order and all findings are merged.
 
 ## GitHub Pages build
 
