@@ -1,6 +1,7 @@
-import fs from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { constants } from 'node:fs';
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
@@ -9,27 +10,26 @@ const execFileAsync = promisify(execFile);
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SCHEMAS_DIR = path.join(ROOT_DIR, 'Schemas');
 const RUNTIME_DIR = path.join(ROOT_DIR, 'public', 'runtime');
+const VALIDATORS_DIR = path.join(RUNTIME_DIR, 'validators');
 const SAXON_JS_RUNTIME = path.join(RUNTIME_DIR, 'SaxonJS2.rt.js');
 const SAXON_JS_RUNTIME_URL =
   process.env.SAXON_JS_RUNTIME_URL ??
   'https://www.saxonica.com/saxon-js/documentation/SaxonJS/SaxonJS2.rt.js';
 const NODE_XSL_SCHEMATRON_DIR = path.join(ROOT_DIR, 'node_modules', 'node-xsl-schematron');
 const XSLT3_BIN = path.join(ROOT_DIR, 'node_modules', 'xslt3', 'xslt3.js');
+const PIPELINE_XSL = path.join(
+  NODE_XSL_SCHEMATRON_DIR,
+  'lib',
+  'schxslt-1.9.5',
+  '2.0',
+  'pipeline-for-svrl.xsl',
+);
+const RESULTS_XSL = path.join(NODE_XSL_SCHEMATRON_DIR, 'lib', 'results.xsl');
 
 const RUNTIME_STYLESHEETS = [
   {
-    outputFileName: 'pipeline-for-svrl.sef.json',
-    stylesheetPath: path.join(
-      NODE_XSL_SCHEMATRON_DIR,
-      'lib',
-      'schxslt-1.9.5',
-      '2.0',
-      'pipeline-for-svrl.xsl',
-    ),
-  },
-  {
-    outputFileName: 'runner.sef.json',
-    stylesheetPath: path.join(NODE_XSL_SCHEMATRON_DIR, 'lib', 'runner.xsl'),
+    outputFileName: 'results.sef.json',
+    stylesheetPath: RESULTS_XSL,
   },
 ];
 
@@ -45,6 +45,7 @@ const CUSTOMIZATION_PREFIX_REGEX =
 
 await assertPathExists(SCHEMAS_DIR, 'Schemas directory');
 await assertPathExists(XSLT3_BIN, 'xslt3 CLI');
+await assertPathExists(PIPELINE_XSL, 'Schematron pipeline stylesheet');
 await Promise.all(
   RUNTIME_STYLESHEETS.map(({ stylesheetPath, outputFileName }) =>
     assertPathExists(stylesheetPath, `${outputFileName} source stylesheet`),
@@ -58,13 +59,15 @@ await Promise.all([
     compileRuntimeAsset(outputFileName, stylesheetPath),
   ),
   writeSchemaRegistry(),
+  removeIfExists(path.join(RUNTIME_DIR, 'pipeline-for-svrl.sef.json')),
+  removeIfExists(path.join(RUNTIME_DIR, 'runner.sef.json')),
 ]);
 
 async function assertPathExists(filePath, label) {
   try {
     await fs.access(filePath, constants.F_OK);
   } catch {
-    throw new Error(`${label} was not found at ${filePath}. Run \"npm install\" before building.`);
+    throw new Error(`${label} was not found at ${filePath}. Run "npm install" before building.`);
   }
 }
 
@@ -88,6 +91,43 @@ async function compileRuntimeAsset(outputFileName, stylesheetPath) {
   }
 }
 
+async function compileSchemaValidator(fileName, schematron) {
+  const schemaBaseName = path.parse(fileName).name;
+  const outputFileName = `${schemaBaseName}.sef.json`;
+  const outputPath = path.join(VALIDATORS_DIR, outputFileName);
+  const temporaryDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'schematron-validator-'));
+  const schemaPath = path.join(temporaryDirectory, fileName);
+  const stylesheetPath = path.join(temporaryDirectory, `${schemaBaseName}.xsl`);
+
+  await fs.writeFile(schemaPath, schematron, 'utf8');
+
+  try {
+    await execFileAsync(process.execPath, [
+      XSLT3_BIN,
+      `-xsl:${PIPELINE_XSL}`,
+      `-s:${schemaPath}`,
+      `-o:${stylesheetPath}`,
+    ]);
+    await execFileAsync(process.execPath, [
+      XSLT3_BIN,
+      `-xsl:${stylesheetPath}`,
+      `-export:${outputPath}`,
+      '-nogo',
+    ]);
+  } catch (error) {
+    const details = [error.stdout, error.stderr].filter(Boolean).join('\n').trim();
+    throw new Error(
+      details
+        ? `Failed generating validator bundle for ${fileName}.\n${details}`
+        : `Failed generating validator bundle for ${fileName}.`,
+    );
+  } finally {
+    await fs.rm(temporaryDirectory, { recursive: true, force: true });
+  }
+
+  return `runtime/validators/${outputFileName}`;
+}
+
 async function ensureBrowserRuntime() {
   try {
     await fs.access(SAXON_JS_RUNTIME, constants.F_OK);
@@ -106,9 +146,16 @@ async function ensureBrowserRuntime() {
   await fs.writeFile(SAXON_JS_RUNTIME, Buffer.from(await response.arrayBuffer()));
 }
 
+async function removeIfExists(filePath) {
+  await fs.rm(filePath, { force: true });
+}
+
 async function writeSchemaRegistry() {
   const files = (await fs.readdir(SCHEMAS_DIR)).filter((file) => file.endsWith('.sch')).sort();
   const schemas = [];
+
+  await fs.rm(VALIDATORS_DIR, { recursive: true, force: true });
+  await fs.mkdir(VALIDATORS_DIR, { recursive: true });
 
   for (const fileName of files) {
     const schematron = await fs.readFile(path.join(SCHEMAS_DIR, fileName), 'utf8');
@@ -122,6 +169,7 @@ async function writeSchemaRegistry() {
     schemas.push({
       transactionCode: fileName.match(/T\d+/)?.[0] ?? fileName,
       fileName,
+      validatorAsset: await compileSchemaValidator(fileName, schematron),
       title,
       documentType: namespaceToDocumentType(namespaceUri),
       namespaceUri,
@@ -131,7 +179,6 @@ async function writeSchemaRegistry() {
       ]),
       customizationIds: unique(collectMatches(CUSTOMIZATION_EXACT_REGEX, schematron)),
       customizationPrefixes: unique(collectMatches(CUSTOMIZATION_PREFIX_REGEX, schematron)),
-      schematron,
     });
   }
 

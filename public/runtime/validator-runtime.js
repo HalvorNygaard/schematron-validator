@@ -7,9 +7,8 @@
 
   const runtimeState = {
     schemaRegistryPromise: null,
-    pipelinePromise: null,
-    runnerPromise: null,
-    compiledValidators: new Map(),
+    resultsPromise: null,
+    validatorPromises: new Map(),
   };
 
   window.saxonJsValidator = {
@@ -37,56 +36,41 @@
     return runtimeState.schemaRegistryPromise;
   }
 
-  async function loadPipeline() {
-    runtimeState.pipelinePromise ??= fetchJson('runtime/pipeline-for-svrl.sef.json');
-    return runtimeState.pipelinePromise;
-  }
-
-  async function loadRunner() {
-    runtimeState.runnerPromise ??= fetchJson('runtime/runner.sef.json');
-    return runtimeState.runnerPromise;
+  async function loadResultsTransformer() {
+    runtimeState.resultsPromise ??= fetchJson('runtime/results.sef.json');
+    return runtimeState.resultsPromise;
   }
 
   async function compileValidator(schema) {
-    const cached = runtimeState.compiledValidators.get(schema.transactionCode);
-    if (cached) {
-      return cached;
+    const cached = runtimeState.validatorPromises.get(schema.transactionCode);
+    if (!cached) {
+      runtimeState.validatorPromises.set(schema.transactionCode, loadValidator(schema));
     }
 
-    const compiled = createCompiledValidator(schema);
-    runtimeState.compiledValidators.set(schema.transactionCode, compiled);
-    return compiled;
+    return runtimeState.validatorPromises.get(schema.transactionCode);
   }
 
-  async function createCompiledValidator(schema) {
-    const pipeline = await loadPipeline();
-    const { principalResult } = await SaxonJS.transform(
+  async function loadValidator(schema) {
+    return fetchJson(schema.validatorAsset);
+  }
+
+  async function runValidator(validator, xml) {
+    const resultsTransformer = await loadResultsTransformer();
+    const { principalResult: svrlDocument } = await SaxonJS.transform(
       {
-        stylesheetInternal: pipeline,
-        sourceText: schema.schematron,
-        destination: 'serialized',
+        stylesheetInternal: validator,
+        sourceText: xml,
+        destination: 'document',
       },
       'async',
     );
 
-    return {
-      ...schema,
-      svrlStylesheet: principalResult,
-    };
-  }
-
-  async function runValidator(schema, xml) {
-    const runner = await loadRunner();
     const { principalResult } = await SaxonJS.transform(
       {
-        stylesheetInternal: runner,
-        initialTemplate: 'go',
+        stylesheetInternal: resultsTransformer,
+        sourceNode: svrlDocument,
         destination: 'raw',
         resultForm: 'array',
-        stylesheetParams: {
-          sourceText: xml,
-          stylesheetText: schema.svrlStylesheet,
-        },
       },
       'async',
     );

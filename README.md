@@ -9,7 +9,7 @@ npm install
 npm start
 ```
 
-`npm start` prepares the generated runtime assets, downloads the official SaxonJS browser runtime if needed, and serves the app as a standard Angular SPA.
+`npm start` prepares the generated runtime assets, downloads the official SaxonJS browser runtime if needed, precompiles browser-safe validator bundles for each Schematron file, and serves the app as a standard Angular SPA.
 
 ## Production build
 
