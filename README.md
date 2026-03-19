@@ -8,10 +8,13 @@ Client-side Angular app for validating Peppol and EHF XML documents against the 
 
 ```bash
 npm install
+npm run prepare:runtime
 npm start
 ```
 
-`npm start` prepares the generated runtime assets, downloads the official SaxonJS browser runtime if needed, precompiles browser-safe validator bundles for each manifest entry, and serves the app as a standard Angular SPA.
+Run `npm run prepare:runtime` whenever you change files in `Schemas/` or `Schemas/registry.json`.
+
+`npm start` now just serves the Angular app and uses the committed runtime assets already in `public/runtime/`.
 
 ## Schema sources
 
@@ -21,13 +24,21 @@ npm start
 
 The app does not guess validation stacks from filenames anymore. If a profile needs multiple Schematron layers, list them in order in `Schemas/registry.json`.
 
+## Runtime assets
+
+- `public/runtime/schema-registry.json` is generated from `Schemas/registry.json`
+- `public/runtime/results.sef.json` is the compiled result transformer
+- `public/runtime/validators/` contains the compiled validator bundles used by the browser
+
+These generated runtime files are committed to git. The project does not recompile them automatically during `npm start`, `npm run build`, or GitHub Actions builds.
+
 ## Production build
 
 ```bash
 npm run build
 ```
 
-The build regenerates `public/runtime/schema-registry.json`, `public/runtime/results.sef.json`, and the compiled validator bundles in `public/runtime/validators/` from the manifest and source `.sch` files.
+`npm run build` assumes those runtime assets are already up to date.
 
 ## Matching rules
 

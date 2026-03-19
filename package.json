@@ -4,9 +4,9 @@
   "scripts": {
     "ng": "ng",
     "prepare:runtime": "node scripts/prepare-static-runtime.mjs",
-    "start": "npm run prepare:runtime && ng serve",
-    "build": "npm run prepare:runtime && ng build",
-    "build:pages": "npm run build -- --configuration production --base-href ./",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:pages": "ng build --configuration production --base-href ./",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -9,9 +10,11 @@ import { fileURLToPath } from 'node:url';
 const execFileAsync = promisify(execFile);
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SCHEMAS_DIR = path.join(ROOT_DIR, 'Schemas');
+const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const RUNTIME_DIR = path.join(ROOT_DIR, 'public', 'runtime');
 const VALIDATORS_DIR = path.join(RUNTIME_DIR, 'validators');
 const SCHEMA_REGISTRY_PATH = path.join(SCHEMAS_DIR, 'registry.json');
+const PREPARE_CACHE_PATH = path.join(RUNTIME_DIR, 'prepare-runtime-cache.json');
 const SAXON_JS_RUNTIME = path.join(RUNTIME_DIR, 'SaxonJS2.rt.js');
 const SAXON_JS_RUNTIME_URL =
   process.env.SAXON_JS_RUNTIME_URL ??
@@ -29,6 +32,7 @@ const RESULTS_XSL = path.join(NODE_XSL_SCHEMATRON_DIR, 'lib', 'results.xsl');
 const TITLE_REGEX = /<title\b[^>]*>([\s\S]*?)<\/title>/i;
 const NS_DECLARATION_REGEX = /<ns\b([^>]*?)\/>/gi;
 const ATTRIBUTE_REGEX = /(prefix|uri)="([^"]+)"/gi;
+const PREPARE_CACHE_VERSION = 1;
 const DOCUMENT_TYPE_NAMESPACES = {
   ApplicationResponse: 'urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2',
   Catalogue: 'urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2',
@@ -49,13 +53,15 @@ await assertPathExists(PIPELINE_XSL, 'Schematron pipeline stylesheet');
 await assertPathExists(RESULTS_XSL, 'Results stylesheet');
 
 await fs.mkdir(RUNTIME_DIR, { recursive: true });
+const prepareCache = await loadPrepareCache();
 await ensureBrowserRuntime();
 await Promise.all([
-  compileRuntimeAsset('results.sef.json', RESULTS_XSL),
-  writeSchemaRegistry(),
+  compileRuntimeAsset('results.sef.json', RESULTS_XSL, prepareCache, 'results-transformer'),
+  writeSchemaRegistry(prepareCache),
   removeIfExists(path.join(RUNTIME_DIR, 'pipeline-for-svrl.sef.json')),
   removeIfExists(path.join(RUNTIME_DIR, 'runner.sef.json')),
 ]);
+await savePrepareCache(prepareCache);
 
 async function assertPathExists(filePath, label) {
   try {
@@ -65,8 +71,15 @@ async function assertPathExists(filePath, label) {
   }
 }
 
-async function compileRuntimeAsset(outputFileName, stylesheetPath) {
+async function compileRuntimeAsset(outputFileName, stylesheetPath, prepareCache, cacheKey) {
   const outputPath = path.join(RUNTIME_DIR, outputFileName);
+  const stylesheet = await fs.readFile(stylesheetPath, 'utf8');
+  const inputHash = hashContent(`runtime:${cacheKey}\n${stylesheet}`);
+
+  if (await canReuseCompiledAsset(outputPath, prepareCache.assets[cacheKey], inputHash)) {
+    prepareCache.assets[cacheKey] = inputHash;
+    return;
+  }
 
   try {
     await execFileAsync(process.execPath, [
@@ -78,9 +91,11 @@ async function compileRuntimeAsset(outputFileName, stylesheetPath) {
   } catch (error) {
     throw new Error(formatExecError(error, `Failed generating ${outputFileName}.`));
   }
+
+  prepareCache.assets[cacheKey] = inputHash;
 }
 
-async function compileSchemaValidator(filePath, outputKey) {
+async function compileSchemaValidator(filePath, outputKey, prepareCache) {
   const normalizedOutputKey = outputKey.replace(/\\/g, '/');
   const outputPath = path.join(VALIDATORS_DIR, `${normalizedOutputKey}.sef.json`);
   const temporaryDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'schematron-validator-'));
@@ -89,7 +104,20 @@ async function compileSchemaValidator(filePath, outputKey) {
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const originalSchema = await fs.readFile(filePath, 'utf8');
-  await fs.writeFile(schemaPath, normalizeSchematronForCompilation(originalSchema));
+  const normalizedSchema = normalizeSchematronForCompilation(originalSchema);
+  const pipeline = await fs.readFile(PIPELINE_XSL, 'utf8');
+  const inputHash = hashContent(
+    `validator:${normalizedOutputKey}\n${normalizedSchema}\n${pipeline}`,
+  );
+
+  if (
+    await canReuseCompiledAsset(outputPath, prepareCache.validators[normalizedOutputKey], inputHash)
+  ) {
+    prepareCache.validators[normalizedOutputKey] = inputHash;
+    return `runtime/validators/${normalizedOutputKey}.sef.json`;
+  }
+
+  await fs.writeFile(schemaPath, normalizedSchema);
 
   try {
     await execFileAsync(process.execPath, [
@@ -109,6 +137,8 @@ async function compileSchemaValidator(filePath, outputKey) {
   } finally {
     await fs.rm(temporaryDirectory, { recursive: true, force: true });
   }
+
+  prepareCache.validators[normalizedOutputKey] = inputHash;
 
   return `runtime/validators/${normalizedOutputKey}.sef.json`;
 }
@@ -135,25 +165,29 @@ async function removeIfExists(filePath) {
   await fs.rm(filePath, { force: true });
 }
 
-async function writeSchemaRegistry() {
+async function writeSchemaRegistry(prepareCache) {
   const manifest = await readSchemaManifest();
-
-  await fs.rm(VALIDATORS_DIR, { recursive: true, force: true });
   await fs.mkdir(VALIDATORS_DIR, { recursive: true });
 
   const schemas = [];
+  const expectedValidatorAssets = new Set();
   for (const entry of manifest) {
-    schemas.push(await createSchemaRegistryEntry(entry));
+    const schema = await createSchemaRegistryEntry(entry, prepareCache);
+    schema.schematrons.forEach((schematron) =>
+      expectedValidatorAssets.add(schematron.validatorAsset),
+    );
+    schemas.push(schema);
   }
 
-  await fs.writeFile(
+  await writeFileIfChanged(
     path.join(RUNTIME_DIR, 'schema-registry.json'),
     `${JSON.stringify(schemas, null, 2)}\n`,
   );
+  await removeObsoleteValidatorAssets(expectedValidatorAssets, prepareCache);
 }
 
-async function createSchemaRegistryEntry(entry) {
-  const schematrons = await compileManifestSchematrons(entry);
+async function createSchemaRegistryEntry(entry, prepareCache) {
+  const schematrons = await compileManifestSchematrons(entry, prepareCache);
   const primarySchematron = schematrons[0];
 
   return {
@@ -171,7 +205,7 @@ async function createSchemaRegistryEntry(entry) {
   };
 }
 
-async function compileManifestSchematrons(entry) {
+async function compileManifestSchematrons(entry, prepareCache) {
   const compiledSchematrons = [];
 
   for (let index = 0; index < entry.schematrons.length; index += 1) {
@@ -186,7 +220,11 @@ async function compileManifestSchematrons(entry) {
       fileName,
       title,
       namespaceUri,
-      validatorAsset: await compileSchemaValidator(schematronPath, buildValidatorKey(entry, index)),
+      validatorAsset: await compileSchemaValidator(
+        schematronPath,
+        buildValidatorKey(entry, index),
+        prepareCache,
+      ),
     });
   }
 
@@ -285,6 +323,95 @@ function normalizeStringArray(value, label) {
 
 function buildValidatorKey(entry, index) {
   return `${entry.id}/${String(index + 1).padStart(2, '0')}`;
+}
+
+async function loadPrepareCache() {
+  try {
+    const raw = await fs.readFile(PREPARE_CACHE_PATH, 'utf8');
+    const parsed = JSON.parse(raw);
+
+    if (parsed?.version === PREPARE_CACHE_VERSION) {
+      return {
+        version: PREPARE_CACHE_VERSION,
+        assets: parsed.assets && typeof parsed.assets === 'object' ? parsed.assets : {},
+        validators:
+          parsed.validators && typeof parsed.validators === 'object' ? parsed.validators : {},
+      };
+    }
+  } catch {}
+
+  return {
+    version: PREPARE_CACHE_VERSION,
+    assets: {},
+    validators: {},
+  };
+}
+
+async function savePrepareCache(prepareCache) {
+  await writeFileIfChanged(PREPARE_CACHE_PATH, `${JSON.stringify(prepareCache, null, 2)}\n`);
+}
+
+async function canReuseCompiledAsset(outputPath, cachedHash, inputHash) {
+  if (!cachedHash || cachedHash !== inputHash) {
+    return false;
+  }
+
+  try {
+    await fs.access(outputPath, constants.F_OK);
+  } catch {
+    return false;
+  }
+
+  return true;
+}
+
+async function writeFileIfChanged(filePath, content) {
+  try {
+    const existing = await fs.readFile(filePath, 'utf8');
+    if (existing === content) {
+      return;
+    }
+  } catch {}
+
+  await fs.writeFile(filePath, content);
+}
+
+async function removeObsoleteValidatorAssets(expectedValidatorAssets, prepareCache) {
+  const existingFiles = await listFilesRecursively(VALIDATORS_DIR);
+
+  for (const filePath of existingFiles) {
+    const relativePath = path.relative(PUBLIC_DIR, filePath).replace(/\\/g, '/');
+    if (!expectedValidatorAssets.has(relativePath)) {
+      await fs.rm(filePath, { force: true });
+    }
+  }
+
+  for (const key of Object.keys(prepareCache.validators)) {
+    const assetPath = `runtime/validators/${key}.sef.json`;
+    if (!expectedValidatorAssets.has(assetPath)) {
+      delete prepareCache.validators[key];
+    }
+  }
+}
+
+async function listFilesRecursively(directoryPath) {
+  const entries = await fs.readdir(directoryPath, { withFileTypes: true }).catch(() => []);
+  const files = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(directoryPath, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listFilesRecursively(entryPath)));
+    } else {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
+function hashContent(value) {
+  return createHash('sha256').update(value).digest('hex');
 }
 
 function normalizeSchematronForCompilation(source) {

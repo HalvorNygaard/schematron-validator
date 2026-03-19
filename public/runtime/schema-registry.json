@@ -1,0 +1,620 @@
+[
+  {
+    "id": "peppol-order",
+    "source": "peppol",
+    "displayTitle": "Peppol Order",
+    "transactionCode": "T01",
+    "title": "Rules for Peppol Order transaction 3.7",
+    "documentType": "Order",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:order_only:3",
+      "urn:fdc:peppol.eu:poacc:bis:ordering:3",
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T01.sch",
+        "title": "Rules for Peppol Order transaction 3.7",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+        "validatorAsset": "runtime/validators/peppol-order/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-order-agreement",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Agreement",
+    "transactionCode": "T110",
+    "title": "Rules for Peppol Order Agreement transaction 3.1",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:order_agreement:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order_agreement:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T110.sch",
+        "title": "Rules for Peppol Order Agreement transaction 3.1",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/peppol-order-agreement/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-invoice-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Invoice Response",
+    "transactionCode": "T111",
+    "title": "Rules for Peppol Invoice Response transaction 3.1",
+    "documentType": "ApplicationResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:invoice_response:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:invoice_response:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T111.sch",
+        "title": "Rules for Peppol Invoice Response transaction 3.1",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+        "validatorAsset": "runtime/validators/peppol-invoice-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-order-change",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Change",
+    "transactionCode": "T114",
+    "title": "Rules for Peppol Order Change transaction 3.2",
+    "documentType": "OrderChange",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderChange-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_change:3"
+    ],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order_change:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T114.sch",
+        "title": "Rules for Peppol Order Change transaction 3.2",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderChange-2",
+        "validatorAsset": "runtime/validators/peppol-order-change/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-order-cancellation",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Cancellation",
+    "transactionCode": "T115",
+    "title": "Rules for Peppol Order Cancellation transaction 3.0",
+    "documentType": "OrderCancellation",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:ordering:3",
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order_cancellation:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T115.sch",
+        "title": "Rules for Peppol Order Cancellation transaction 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+        "validatorAsset": "runtime/validators/peppol-order-cancellation/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-advanced-order-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Advanced Order Response",
+    "transactionCode": "T116",
+    "title": "Rules for Peppol Order Response Advanced transaction 3.2",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response_advanced:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T116.sch",
+        "title": "Rules for Peppol Order Response Advanced transaction 3.2",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/peppol-advanced-order-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-catalogue",
+    "source": "peppol",
+    "displayTitle": "Peppol Catalogue",
+    "transactionCode": "T16",
+    "title": "Rules for Peppol Despatch Advice transaction 3.5",
+    "documentType": "Catalogue",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:catalogue:3",
+      "urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T16.sch",
+        "title": "Rules for Peppol Despatch Advice transaction 3.5",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2",
+        "validatorAsset": "runtime/validators/peppol-catalogue/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-catalogue-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Catalogue Response",
+    "transactionCode": "T19",
+    "title": "Rules for Peppol Catalogue transaction 3.5",
+    "documentType": "CatalogueResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue_response:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T19.sch",
+        "title": "Rules for Peppol Catalogue transaction 3.5",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+        "validatorAsset": "runtime/validators/peppol-catalogue-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-mlr-response",
+    "source": "peppol",
+    "displayTitle": "Peppol MLR Response",
+    "transactionCode": "T58",
+    "title": "Rules for Peppol Catalogue Response transaction 3.0",
+    "documentType": "ApplicationResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:catalogue_only:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:mlr:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T58.sch",
+        "title": "Rules for Peppol Catalogue Response transaction 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+        "validatorAsset": "runtime/validators/peppol-mlr-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-message-level-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Message Level Response",
+    "transactionCode": "T71",
+    "title": "Rules for Peppol Message Level Response transaction 3.0",
+    "documentType": "ApplicationResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:mlr:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:mlr:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T71.sch",
+        "title": "Rules for Peppol Message Level Response transaction 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+        "validatorAsset": "runtime/validators/peppol-message-level-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-order-response",
+    "source": "peppol",
+    "displayTitle": "Peppol Order Response",
+    "transactionCode": "T76",
+    "title": "Rules for Peppol Order Response transaction 3.2",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:ordering:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T76.sch",
+        "title": "Rules for Peppol Order Response transaction 3.2",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/peppol-order-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "peppol-despatch-advice",
+    "source": "peppol",
+    "displayTitle": "Peppol Despatch Advice",
+    "transactionCode": "T77",
+    "title": "Rules for Peppol Punch Out transaction 3.2",
+    "documentType": "DespatchAdvice",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+    "profileIds": [
+      "urn:fdc:peppol.eu:poacc:bis:despatch_advice:3"
+    ],
+    "customizationIds": [],
+    "customizationPrefixes": [
+      "urn:fdc:peppol.eu:poacc:trns:despatch_advice:3"
+    ],
+    "schematrons": [
+      {
+        "fileName": "PEPPOLBIS-T77.sch",
+        "title": "Rules for Peppol Punch Out transaction 3.2",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+        "validatorAsset": "runtime/validators/peppol-despatch-advice/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order 3.0",
+    "transactionCode": "EHF-ORDER-3.0",
+    "title": "EHF Order 3.0",
+    "documentType": "Order",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:02:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/ordering-3.0/EHF-ORDER-3.0.sch",
+        "title": "EHF Order 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+        "validatorAsset": "runtime/validators/ehf-order/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order Response 3.0",
+    "transactionCode": "EHF-T76",
+    "title": "EHF Order Response 3.0",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:02:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/ordering-3.0/EHF-ORDER-RESPONSE-3.0.sch",
+        "title": "EHF Order Response 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/ehf-order-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order-agreement",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Order Agreement 3.0",
+    "transactionCode": "EHF-T110",
+    "title": "EHF Order Agreement 3.0",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:03:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_agreement:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/order-agreement-3.0/EHF-ORDER-AGREEMENT-3.0.sch",
+        "title": "EHF Order Agreement 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/ehf-order-agreement/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-despatch-advice",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Despatch Advice 3.0",
+    "transactionCode": "EHF-DESPATCH-3.0",
+    "title": "EHF Despatch Advice 3.0",
+    "documentType": "DespatchAdvice",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:05:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/despatch-advice-3.0/EHF-DESPATCH-ADVICE-3.0.sch",
+        "title": "EHF Despatch Advice 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2",
+        "validatorAsset": "runtime/validators/ehf-despatch-advice/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order-change",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Change 3.0",
+    "transactionCode": "EHF-P09-CHANGE",
+    "title": "EHF Advanced Order Change 3.0",
+    "documentType": "OrderChange",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderChange-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:spec:adv-order-change:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-CHANGE.sch",
+        "title": "EHF Advanced Order Change 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderChange-2",
+        "validatorAsset": "runtime/validators/ehf-order-change/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order-cancellation",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Cancellation 3.0",
+    "transactionCode": "EHF-P09-CANCEL",
+    "title": "EHF Advanced Order Cancellation 3.0",
+    "documentType": "OrderCancellation",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:spec:adv-order-cancellation:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-CANCELLATION.sch",
+        "title": "EHF Advanced Order Cancellation 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+        "validatorAsset": "runtime/validators/ehf-order-cancellation/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-advanced-order-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Response 3.0",
+    "transactionCode": "EHF-P09-RESPONSE",
+    "title": "EHF Advanced Order Response 3.0",
+    "documentType": "OrderResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-RESPONSE.sch",
+        "title": "EHF Advanced Order Response 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+        "validatorAsset": "runtime/validators/ehf-advanced-order-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-order-initiation",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Advanced Order Initiation 3.0",
+    "transactionCode": "EHF-P09-ORDER",
+    "title": "EHF Advanced Order Initiation 3.0",
+    "documentType": "Order",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:09:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:order:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/advanced-ordering-3.0/EHF-P09-3.0-ORDER-INITIATION.sch",
+        "title": "EHF Advanced Order Initiation 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+        "validatorAsset": "runtime/validators/ehf-order-initiation/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-catalogue",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Catalogue 3.0",
+    "transactionCode": "EHF-CATALOGUE-3.0",
+    "title": "EHF Catalogue 3.0",
+    "documentType": "Catalogue",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:01:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/catalogue-3.0/EHF-CATALOGUE-3.0.sch",
+        "title": "EHF Catalogue 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+        "validatorAsset": "runtime/validators/ehf-catalogue/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-catalogue-response",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Catalogue Response 3.0",
+    "transactionCode": "EHF-T58",
+    "title": "EHF Catalogue Response 3.0",
+    "documentType": "ApplicationResponse",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:01:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:catalogue_response:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/catalogue-3.0/EHF-CATALOGUE-RESPONSE-3.0.sch",
+        "title": "EHF Catalogue Response 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2",
+        "validatorAsset": "runtime/validators/ehf-catalogue-response/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-punch-out",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Punch Out 3.0",
+    "transactionCode": "EHF-PUNCH-OUT-3.0",
+    "title": "EHF Punch Out 3.0",
+    "documentType": "Catalogue",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:04:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:peppol.eu:poacc:trns:punch_out:3:extended:urn:fdc:anskaffelser.no:2019:ehf:spec:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/punch-out-3.0/EHF-PUNCH-OUT-3.0.sch",
+        "title": "EHF Punch Out 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Catalogue-2",
+        "validatorAsset": "runtime/validators/ehf-punch-out/01.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-reminder",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Reminder 3.0",
+    "transactionCode": "EHF-P06",
+    "title": "EHF-P06 (REMINDER-CEN-EN16931-UBL)",
+    "documentType": "Invoice",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:06:1.0"
+    ],
+    "customizationIds": [
+      "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0#conformant#urn:fdc:anskaffelser.no:2019:ehf:reminder:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/reminder-3.0/REMINDER-CEN-EN16931-UBL.sch",
+        "title": "EHF-P06 (REMINDER-CEN-EN16931-UBL)",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+        "validatorAsset": "runtime/validators/ehf-reminder/01.sef.json"
+      },
+      {
+        "fileName": "ehf-postaward-g3/reminder-3.0/REMINDER-PEPPOL-EN16931-UBL.sch",
+        "title": "Rules for PEPPOL BIS 3.0 Billing",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+        "validatorAsset": "runtime/validators/ehf-reminder/02.sef.json"
+      },
+      {
+        "fileName": "ehf-postaward-g3/reminder-3.0/EHF-P06-3.0-REMINDER.sch",
+        "title": "EHF Reminder 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+        "validatorAsset": "runtime/validators/ehf-reminder/03.sef.json"
+      }
+    ]
+  },
+  {
+    "id": "ehf-payment-request",
+    "source": "ehf-postaward-g3",
+    "displayTitle": "EHF Payment Request 3.0",
+    "transactionCode": "EHF-P07",
+    "title": "EHF Payment Request 3.0",
+    "documentType": "Invoice",
+    "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+    "profileIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:postaward:g3:07:1.0"
+    ],
+    "customizationIds": [
+      "urn:fdc:anskaffelser.no:2019:ehf:spec:payment-request:3.0"
+    ],
+    "customizationPrefixes": [],
+    "schematrons": [
+      {
+        "fileName": "ehf-postaward-g3/payment-request-3.0/EHF-P07-3.0-PAYMENT-REQUEST-3.0.sch",
+        "title": "EHF Payment Request 3.0",
+        "namespaceUri": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+        "validatorAsset": "runtime/validators/ehf-payment-request/01.sef.json"
+      }
+    ]
+  }
+]

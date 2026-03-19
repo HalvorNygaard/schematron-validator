@@ -16,7 +16,7 @@ saxon-js/
 saxonjs-he-*.tgz
 public/runtime/pipeline-for-svrl.sef.json
 public/runtime/runner.sef.json
-public/runtime/schema-registry.json
+public/runtime/prepare-runtime-cache.json
 
 # IDEs and editors
 .idea/
