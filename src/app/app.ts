@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 
 import type { ValidationIssue, ValidationResponse } from './core/models/validation.models';
 import { ValidationService } from './core/services/validation.service';
@@ -14,7 +21,9 @@ import {
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.html',
+  styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class App {
   private readonly validationService = inject(ValidationService);
